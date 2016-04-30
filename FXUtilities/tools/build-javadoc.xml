@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="FXUtilities Javadoc" default="javadoc-jar">
+    <target name="javadoc">
+        <javadoc 
+        	access="public" 
+        	author="true" 
+        	classpath="C:\Users\PC1\.p2\pool\plugins\org.eclipse.fx.ide.css.jfx8_2.1.0.201508240705.jar"
+        	destdir="../doc"
+        	nodeprecated="false" 
+        	nodeprecatedlist="false" 
+        	noindex="false" 
+        	nonavbar="false" 
+        	notree="false" 
+        	packagenames="com.cbapps.javafx.utilities.animation,com.cbapps.javafx.utilities.skin,com.cbapps.javafx.utilities.control" 
+        	source="1.8" 
+        	sourcepath="../src" 
+        	splitindex="true" 
+        	use="true" 
+        	version="true"/>
+    </target>
+	<target depends="javadoc" name="javadoc-jar">
+		<jar compress="true" destfile="../output/FXUtilities-javadoc.jar" basedir="../doc"></jar>
+	</target>
+</project>
