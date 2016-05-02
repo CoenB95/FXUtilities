@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<project name="FXUtilities Javadoc" default="javadoc-jar">
+<project name="FXUtilities Builder" default="create-all">
     <target name="javadoc">
+    	<echo>Building the Javadoc...</echo>
         <javadoc 
         	access="public" 
         	author="true" 
@@ -17,8 +18,26 @@
         	splitindex="true" 
         	use="true" 
         	version="true"/>
+    	<echo>Done</echo>
     </target>
-	<target depends="javadoc" name="javadoc-jar">
-		<jar compress="true" destfile="../output/FXUtilities-javadoc.jar" basedir="../doc"></jar>
+	<target depends="javadoc" name="create-javadoc">
+		<echo>Compressing the Javadoc...</echo>
+		<jar 
+			compress="true" 
+			destfile="../output/FXUtilities-javadoc.jar" 
+			basedir="../doc"></jar>
+		<echo>Done building Javadoc</echo>
+	</target>
+	<target name="create-jar">
+		<echo>Building the Jar...</echo>
+		<jar 
+			compress="true" 
+			destfile="../output/FXUtilities.jar" 
+			basedir="../bin">
+		</jar>
+		<echo>Done building jar</echo>
+	</target>
+	<target name="create-all" depends="create-jar, create-javadoc">
+		<echo>Done building all</echo>
 	</target>
 </project>
