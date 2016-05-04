@@ -21,10 +21,10 @@ public class CardView extends Control {
 			new SimpleObjectProperty<>();
 	private final ObjectProperty<Font> textFont =
 			new SimpleObjectProperty<Font>(
-					Font.loadFont(RobotoFont.REGULAR, 14));
+					Font.loadFont(RobotoFont.regular(), 14));
 	private final ObjectProperty<Font> titleFont =
 			new SimpleObjectProperty<Font>(
-					Font.loadFont(RobotoFont.MEDIUM, 16));
+					Font.loadFont(RobotoFont.medium(), 16));
 
 	public StringProperty textProperty() {
 		return text;

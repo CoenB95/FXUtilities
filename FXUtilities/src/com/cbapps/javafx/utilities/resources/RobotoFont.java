@@ -4,22 +4,23 @@ import java.io.InputStream;
 
 /**Util class for easy using Roboto Fonts.
  * Example usage:<p>
- * {@code Font.loadFont(Roboto.REGULAR, 14);}*/
+ * {@code Font.loadFont(RobotoFont.regular(), 14);}*/
 public class RobotoFont {
 
-	public static final InputStream BOLD = RobotoFont.class
-			.getResourceAsStream("/com/cbapps/javafx/utilities/"
-					+ "resources/Roboto-Bold.ttf");
+	public static final InputStream bold() { 
+		return RobotoFont.class.getResourceAsStream("Roboto-Bold.ttf");
+	}
+
 	
-	public static final InputStream MEDIUM = RobotoFont.class
-			.getResourceAsStream("/com/cbapps/javafx/utilities/"
-					+ "resources/Roboto-Medium.ttf");
+	public static final InputStream medium() {
+		return RobotoFont.class.getResourceAsStream("Roboto-Medium.ttf");
+	}
 	
-	public static final InputStream REGULAR = RobotoFont.class
-			.getResourceAsStream("/com/cbapps/javafx/utilities/"
-					+ "resources/Roboto-Regular.ttf");
+	public static final InputStream regular() { 
+		return RobotoFont.class.getResourceAsStream("Roboto-Regular.ttf");
+	}
 	
-	public static final InputStream THIN = RobotoFont.class
-			.getResourceAsStream("/com/cbapps/javafx/utilities/"
-					+ "resources/Roboto-Thin.ttf");
+	public static final InputStream thin() {
+		return RobotoFont.class.getResourceAsStream("Roboto-Thin.ttf");
+	}
 }
