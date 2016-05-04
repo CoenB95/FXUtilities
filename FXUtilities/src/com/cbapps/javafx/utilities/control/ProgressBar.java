@@ -1,6 +1,6 @@
 package com.cbapps.javafx.utilities.control;
 
-import com.cbapps.javafx.utilities.skin.AndroidProgressBarSkin;
+import com.cbapps.javafx.utilities.skin.ProgressBarSkin;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
@@ -11,7 +11,7 @@ import javafx.scene.control.Skin;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 
-public class AndroidProgressBar extends Control {
+public class ProgressBar extends Control {
 
 	private final DoubleProperty size = new SimpleDoubleProperty(35);
 	private final ObjectProperty<Paint> color = 
@@ -25,13 +25,13 @@ public class AndroidProgressBar extends Control {
 		return color;
 	}
 	
-	public AndroidProgressBar() {
+	public ProgressBar() {
 		
 	}
 	
 	@Override
 	protected Skin<?> createDefaultSkin() {
-		return new AndroidProgressBarSkin(this);
+		return new ProgressBarSkin(this);
 	}
 	
 	public Paint getColor() {

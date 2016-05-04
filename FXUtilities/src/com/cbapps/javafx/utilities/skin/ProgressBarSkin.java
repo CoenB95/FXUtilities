@@ -3,7 +3,7 @@ package com.cbapps.javafx.utilities.skin;
 import com.cbapps.javafx.utilities.animation.ArcTransition;
 import com.cbapps.javafx.utilities.animation.SmoothInterpolator;
 import com.cbapps.javafx.utilities.animation.SmoothInterpolator.AnimType;
-import com.cbapps.javafx.utilities.control.AndroidProgressBar;
+import com.cbapps.javafx.utilities.control.ProgressBar;
 
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
@@ -16,9 +16,9 @@ import javafx.scene.shape.Arc;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-public class AndroidProgressBarSkin extends SkinBase<AndroidProgressBar> {
+public class ProgressBarSkin extends SkinBase<ProgressBar> {
 	
-	public AndroidProgressBarSkin(AndroidProgressBar control) {
+	public ProgressBarSkin(ProgressBar control) {
 		super(control);
 		StackPane pane = new StackPane();
 		Rectangle rec = new Rectangle();
