@@ -1,0 +1,12 @@
+.vbox {
+	-fx-background-color: white;
+	-fx-background-radius: 2; 
+}
+
+.vbox:hover {
+	-fx-background-color: derive(white, -10%); 
+}
+
+.label {
+	-fx-background-color: purple;
+}
