@@ -7,9 +7,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 
 public class CardView extends Button {
@@ -18,9 +16,6 @@ public class CardView extends Button {
 			new SimpleStringProperty("Text");
 	private final StringProperty cardTitle = 
 			new SimpleStringProperty("Title");
-	//private final ObjectProperty<EventHandler<? super MouseEvent>> 
-	//cardClicked = 
-	//		new SimpleObjectProperty<EventHandler<? super MouseEvent>>();
 	private final ObjectProperty<Font> cardTextFont =
 			new SimpleObjectProperty<Font>(
 					Font.loadFont(RobotoFont.regular(), 14));
@@ -44,18 +39,9 @@ public class CardView extends Button {
 		return cardTitleFont;
 	}
 
-	//public ObjectProperty<EventHandler<? super MouseEvent>> 
-	//onCardClickedProperty() {
-	//	return cardClicked;
-	//}
-
 	public CardView() {
 		this.setGraphic(CardViewSkin.createSkin(this));
 	}
-
-	//public EventHandler<? super MouseEvent> getOnClicked() {
-	//	return cardClicked.get();
-	//}
 
 	public String getCardText() {
 		return textProperty().get();
@@ -72,11 +58,6 @@ public class CardView extends Button {
 	public Font getCardTitleFont() {
 		return cardTitleFontProperty().get();
 	}
-
-	//public void setOnCardClicked(EventHandler<? super MouseEvent> 
-	//event) {
-	//	cardClicked.set(event);
-	//}
 
 	public void setCardText(String t) {
 		cardTextProperty().set(t);
