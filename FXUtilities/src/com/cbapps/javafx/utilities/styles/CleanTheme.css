@@ -1,12 +1,21 @@
-.vbox {
+#cardview {
+	-fx-border-color: transparent;
 	-fx-background-color: white;
-	-fx-background-radius: 2; 
+	-fx-background-radius: 2;
+	-fx-border-radius: 2;
+	-fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);
 }
 
-.vbox:hover {
+#cardview:hover {
+	-fx-border-color: transparent;
 	-fx-background-color: derive(white, -10%); 
 }
 
-.label {
-	-fx-background-color: purple;
+#cardview:pressed {
+	-fx-border-color: transparent;
+	-fx-background-color: derive(white, -20%); 
+}
+
+#cardview:focused {
+	-fx-border-color: -fx-accent;
 }
