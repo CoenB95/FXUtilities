@@ -17,8 +17,8 @@ public class CardView extends Control {
 
 	private final StringProperty text = new SimpleStringProperty("Text");
 	private final StringProperty title = new SimpleStringProperty("Title");
-	private final ObjectProperty<EventHandler<? super MouseEvent>> listener = 
-			new SimpleObjectProperty<>();
+	private final ObjectProperty<EventHandler<? super MouseEvent>> clicked = 
+			new SimpleObjectProperty<EventHandler<? super MouseEvent>>();
 	private final ObjectProperty<Font> textFont =
 			new SimpleObjectProperty<Font>(
 					Font.loadFont(RobotoFont.regular(), 14));
@@ -44,7 +44,7 @@ public class CardView extends Control {
 
 	public ObjectProperty<EventHandler<? super MouseEvent>> 
 	onClickedProperty() {
-		return listener;
+		return clicked;
 	}
 
 	public CardView() {
@@ -57,7 +57,7 @@ public class CardView extends Control {
 	}
 
 	public EventHandler<? super MouseEvent> getOnClicked() {
-		return listener.get();
+		return clicked.get();
 	}
 
 	public String getText() {
@@ -77,7 +77,7 @@ public class CardView extends Control {
 	}
 
 	public void setOnClicked(EventHandler<? super MouseEvent> event) {
-		listener.set(event);
+		clicked.set(event);
 	}
 
 	public void setText(String t) {

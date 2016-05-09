@@ -19,13 +19,13 @@ public class CardViewSkin extends SkinBase<CardView> {
 	public CardViewSkin(CardView control) {
 		super(control);
 		VBox box = new VBox();
-		box.backgroundProperty().bind(Bindings.when(box.hoverProperty())
+		getSkinnable().backgroundProperty().bind(Bindings.when(box.hoverProperty())
 				.then(new Background(new BackgroundFill(Color.gray(0.9),
 				new CornerRadii(2),null)))
 				.otherwise(new Background(new BackgroundFill(Color.WHITE,
 						new CornerRadii(2),null))));
-		box.setEffect(new DropShadow());
-		box.onMouseClickedProperty().bind(control.onClickedProperty());
+		getSkinnable().setEffect(new DropShadow());
+		getSkinnable().onMouseClickedProperty().bind(control.onClickedProperty());
 		box.setPadding(new Insets(5));
 		Label titleLabel = new Label();
 		VBox.setMargin(titleLabel, new Insets(5));
