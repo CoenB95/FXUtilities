@@ -1,12 +1,15 @@
 package com.cbapps.javafx.utilities.skin;
 
-import com.cbapps.javafx.utilities.animation.ArcTransition;
 import com.cbapps.javafx.utilities.animation.SmoothInterpolator;
 import com.cbapps.javafx.utilities.animation.SmoothInterpolator.AnimType;
 import com.cbapps.javafx.utilities.control.ProgressBar;
 
+import javafx.animation.Animation;
 import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
 import javafx.animation.RotateTransition;
+import javafx.animation.Timeline;
 import javafx.animation.Transition;
 import javafx.scene.Group;
 import javafx.scene.control.SkinBase;
@@ -42,11 +45,26 @@ public class ProgressBarSkin extends SkinBase<ProgressBar> {
 		Group arc_grp = new Group();
 		arc_grp.getChildren().addAll(arc_rec, arc);
 		pane.getChildren().addAll(rec,arc_grp);
-		ArcTransition at = new ArcTransition(Duration.millis(800), arc);
-		at.setCycleCount(Transition.INDEFINITE);
-		at.setAutoReverse(true);
-		at.setInterpolator(new SmoothInterpolator(AnimType.ACCELDECEL));
-		at.play();
+		Interpolator INT = new SmoothInterpolator(AnimType.ACCELDECEL);
+		Timeline timeline = new Timeline(
+				new KeyFrame(Duration.millis(0), 
+						new KeyValue(arc.lengthProperty(), 20)),
+				new KeyFrame(Duration.millis(800),
+				event -> {
+					double angle = arc.getStartAngle() + 270;
+					while (angle > 360) angle -= 360;
+					arc.setStartAngle(angle);
+				},new KeyValue(arc.lengthProperty(), 270, INT)),
+				new KeyFrame(Duration.millis(800), 
+						new KeyValue(arc.lengthProperty(), -270)),
+				new KeyFrame(Duration.millis(1600),
+						event -> {
+							double angle = arc.getStartAngle() -20;
+							while (angle > 360) angle -= 360;
+							arc.setStartAngle(angle);
+						},new KeyValue(arc.lengthProperty(), -20, INT)));
+		timeline.setCycleCount(Animation.INDEFINITE);
+		timeline.play();
 		RotateTransition art = new RotateTransition(Duration.millis(2000), 
 				arc_grp);
 		art.setFromAngle(0);
