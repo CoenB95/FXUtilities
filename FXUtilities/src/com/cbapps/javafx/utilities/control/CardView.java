@@ -8,91 +8,89 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
-import javafx.scene.control.Control;
-import javafx.scene.control.Skin;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Font;
 
-public class CardView extends Control {
+public class CardView extends Button {
 
-	private final StringProperty text = new SimpleStringProperty("Text");
-	private final StringProperty title = new SimpleStringProperty("Title");
-	private final ObjectProperty<EventHandler<? super MouseEvent>> clicked = 
-			new SimpleObjectProperty<EventHandler<? super MouseEvent>>();
-	private final ObjectProperty<Font> textFont =
+	private final StringProperty cardText = 
+			new SimpleStringProperty("Text");
+	private final StringProperty cardTitle = 
+			new SimpleStringProperty("Title");
+	//private final ObjectProperty<EventHandler<? super MouseEvent>> 
+	//cardClicked = 
+	//		new SimpleObjectProperty<EventHandler<? super MouseEvent>>();
+	private final ObjectProperty<Font> cardTextFont =
 			new SimpleObjectProperty<Font>(
 					Font.loadFont(RobotoFont.regular(), 14));
-	private final ObjectProperty<Font> titleFont =
+	private final ObjectProperty<Font> cardTitleFont =
 			new SimpleObjectProperty<Font>(
 					Font.loadFont(RobotoFont.medium(), 16));
-
-	public StringProperty textProperty() {
-		return text;
+	
+	public StringProperty cardTextProperty() {
+		return cardText;
 	}
 	
-	public ObjectProperty<Font> textFontProperty() {
-		return textFont;
+	public ObjectProperty<Font> cardTextFontProperty() {
+		return cardTextFont;
 	}
 
-	public StringProperty titleProperty() {
-		return title;
+	public StringProperty cardTitleProperty() {
+		return cardTitle;
 	}
 	
-	public ObjectProperty<Font> titleFontProperty() {
-		return titleFont;
+	public ObjectProperty<Font> cardTitleFontProperty() {
+		return cardTitleFont;
 	}
 
-	public ObjectProperty<EventHandler<? super MouseEvent>> 
-	onClickedProperty() {
-		return clicked;
-	}
+	//public ObjectProperty<EventHandler<? super MouseEvent>> 
+	//onCardClickedProperty() {
+	//	return cardClicked;
+	//}
 
 	public CardView() {
-
+		this.setGraphic(CardViewSkin.createSkin(this));
 	}
 
-	@Override
-	protected Skin<?> createDefaultSkin() {
-		return new CardViewSkin(this);
-	}
+	//public EventHandler<? super MouseEvent> getOnClicked() {
+	//	return cardClicked.get();
+	//}
 
-	public EventHandler<? super MouseEvent> getOnClicked() {
-		return clicked.get();
-	}
-
-	public String getText() {
+	public String getCardText() {
 		return textProperty().get();
 	}
 
-	public Font getTextFont() {
-		return textFontProperty().get();
+	public Font getCardTextFont() {
+		return cardTextFontProperty().get();
 	}
 	
-	public String getTitle() {
-		return titleProperty().get();
+	public String getCardTitle() {
+		return cardTitleProperty().get();
 	}
 	
-	public Font getTitleFont() {
-		return titleFontProperty().get();
+	public Font getCardTitleFont() {
+		return cardTitleFontProperty().get();
 	}
 
-	public void setOnClicked(EventHandler<? super MouseEvent> event) {
-		clicked.set(event);
-	}
+	//public void setOnCardClicked(EventHandler<? super MouseEvent> 
+	//event) {
+	//	cardClicked.set(event);
+	//}
 
-	public void setText(String t) {
-		textProperty().set(t);
+	public void setCardText(String t) {
+		cardTextProperty().set(t);
 	}
 	
-	public void setTextFont(Font f) {
-		textFontProperty().set(f);
+	public void setCardTextFont(Font f) {
+		cardTextFontProperty().set(f);
 	}
 
-	public void setTitle(String t) {
-		titleProperty().set(t);
+	public void setCardTitle(String t) {
+		cardTitleProperty().set(t);
 	}
 	
-	public void setTitleFont(Font f) {
-		titleFontProperty().set(f);
+	public void setCardTitleFont(Font f) {
+		cardTitleFontProperty().set(f);
 	}
 }
