@@ -55,7 +55,7 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 				new KeyFrame(Duration.ZERO, 
 						new KeyValue(secondProperty(), 0)),
 				new KeyFrame(Duration.seconds(60), event -> {
-					int m = minuteProperty().get() + 1;
+					int m = minuteProperty().intValue() + 1;
 					int h, hn;
 					h = hn = hourProperty().get();
 					while (m >= 60) {
@@ -116,8 +116,8 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 		return hour;
 	}
 	
-	private IntegerProperty minute = new SimpleIntegerProperty(0);
-	public IntegerProperty minuteProperty() {
+	private DoubleProperty minute = new SimpleDoubleProperty(0);
+	public DoubleProperty minuteProperty() {
 		return minute;
 	}
 	
