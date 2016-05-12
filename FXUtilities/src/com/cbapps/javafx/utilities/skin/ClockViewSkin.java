@@ -45,22 +45,10 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 		arc.strokeProperty().bind(control.colorProperty());
 		Timeline animation = new Timeline(
 				new KeyFrame(Duration.ZERO),
-				//new KeyValue(animProperty(), 0)),
 				new KeyFrame(Duration.millis(2000), 
 						new KeyValue(animProperty(), 1, 
 								new SmoothInterpolator(
-										AnimType.ACCELDECEL))),
-				new KeyFrame(Duration.millis(7000),
-						new KeyValue(animProperty(), 1)),
-				new KeyFrame(Duration.millis(9000), 
-						new KeyValue(animProperty(), 0, 
-								new SmoothInterpolator(
-										AnimType.ACCELDECEL))),
-				new KeyFrame(Duration.millis(11000),
-						new KeyValue(animProperty(), 0)));
-		//animation.setDelay(Duration.seconds(5));
-		//animation.setAutoReverse(true);
-		animation.setCycleCount(Animation.INDEFINITE);
+										AnimType.ACCELDECEL))));
 		animation.play();
 		arc.lengthProperty().bind(animProperty().multiply(-360));
 		Timeline time = new Timeline(
