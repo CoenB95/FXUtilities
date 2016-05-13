@@ -68,7 +68,8 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 				}, new KeyValue(secondProperty(), 60)));
 		time.setCycleCount(Animation.INDEFINITE);
 		Calendar calendar = Calendar.getInstance();
-		time.playFrom(Duration.seconds(calendar.get(Calendar.SECOND)));
+		time.playFrom(Duration.millis(calendar.get(Calendar.SECOND)
+				*1000 + calendar.get(Calendar.MILLISECOND)));
 		minuteProperty().set(calendar.get(Calendar.MINUTE));
 		hourProperty().set(calendar.get(Calendar.HOUR));
 		Line sec_line = createLine(control, secondProperty(), 
