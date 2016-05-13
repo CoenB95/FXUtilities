@@ -19,3 +19,22 @@
 #cardview:focused {
 	-fx-border-color: -fx-accent;
 }
+
+#clockview {
+	-fx-border-color: transparent;
+	-fx-background-color: rgba(255,255,255,0);
+}
+
+#clockview:hover {
+	-fx-border-color: transparent;
+	-fx-background-color: rgba(255,255,255,0.15); 
+}
+
+#clockview:pressed {
+	-fx-border-color: transparent;
+	-fx-background-color: rgba(255,255,255,0.30); 
+}
+
+#clockview:focused {
+	-fx-border-color: -fx-accent;
+}

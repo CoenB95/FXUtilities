@@ -20,8 +20,6 @@ public class CardViewSkin extends SkinBase<CardView> {
 		control.setId("cardview");
 		control.getStylesheets().add("/com/cbapps/javafx/"
 				+ "utilities/styles/CleanTheme.css");
-		//control.onMouseClickedProperty().bind(control
-		//		.onCardClickedProperty());
 		box.setPadding(new Insets(5));
 		Label titleLabel = new Label();
 		VBox.setMargin(titleLabel, new Insets(5));
