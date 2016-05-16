@@ -29,6 +29,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
 import javafx.util.Duration;
@@ -51,7 +52,8 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 		arc.radiusXProperty().bind(control.sizeProperty().multiply(0.4));
 		arc.radiusYProperty().bind(control.sizeProperty().multiply(0.4));
 		arc.setStartAngle(90);
-		arc.setStrokeWidth(3);
+		arc.strokeWidthProperty().bind(control.sizeProperty()
+				.multiply(0.02));
 		arc.setFill(Color.TRANSPARENT);
 		arc.strokeProperty().bind(control.colorProperty());
 		Timeline animation = new Timeline(
@@ -84,13 +86,16 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 				*1000 + calendar.get(Calendar.MILLISECOND)));
 		minuteProperty().set(calendar.get(Calendar.MINUTE));
 		hourProperty().set(calendar.get(Calendar.HOUR_OF_DAY));
-		Line sec_line = createLine(control, secondProperty(), 
-				animProperty().multiply(0.85), 60);
-		Line min_line = createLine(control, minuteProperty(), 
-				animProperty().multiply(0.80), 60);
+		Line sec_line = createLine(control, secondProperty(),
+				0.8, 0.3, 0.008, 60);
+				//animProperty().multiply(0.85), 60);
+		Line min_line = createLine(control, minuteProperty(),
+				0.8, 0.1, 0.015, 60);
+				//animProperty().multiply(0.80), 60);
 		Line hour_line = createLine(control, hourProperty().add(
-				minuteProperty().divide(60)), 
-				animProperty().multiply(0.65), 12);
+				minuteProperty().divide(60)),
+				0.5, 0.1, 0.015, 12);
+				//animProperty().multiply(0.65), 12);
 		sec_line.setStroke(Color.RED);
 		min_line.strokeProperty().bind(control.colorProperty());
 		hour_line.strokeProperty().bind(control.colorProperty());
@@ -141,17 +146,22 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 		getChildren().add(pane);
 	}
 
-	private Line createLine(ClockView control, NumberExpression 
-			property, NumberExpression arm_length, int divide) {
+	private Line createLine(ClockView control, NumberExpression property,
+			double arm_length, double back_length, 
+			double stroke_weigth, int divide) {
 		Line line = new Line();
-		line.setStrokeWidth(3);
+		line.strokeWidthProperty().bind(control.sizeProperty()
+				.multiply(stroke_weigth));
 		line.startXProperty().bind(control.sizeProperty()
 				.multiply(0.5));
-		line.startYProperty().bind(control.sizeProperty()
-				.multiply(0.5));
+		line.startYProperty().bind(control.sizeProperty().multiply(
+				Bindings.multiply(0.4, Bindings.multiply(back_length,
+						animProperty())).add(0.5)));
 		line.endXProperty().bind(control.sizeProperty().multiply(0.5));
 		line.endYProperty().bind(control.sizeProperty().multiply(
-				arm_length.multiply(-0.4).add(0.5)));
+				Bindings.multiply(-0.4, Bindings.multiply(arm_length,
+				animProperty())).add(0.5)));
+		line.setStrokeLineCap(StrokeLineCap.ROUND);
 		Rotate rotation = new Rotate();
 		rotation.pivotXProperty().bind(control.sizeProperty().multiply(0.5));
 		rotation.pivotYProperty().bind(control.sizeProperty().multiply(0.5));
