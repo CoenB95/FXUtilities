@@ -104,6 +104,10 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 		Label clock_text = new Label();
 		clock_text.setFont(Font.loadFont(RobotoFont.thin(), 70));
 		clock_text.textFillProperty().bind(control.colorProperty());
+		clock_text.scaleXProperty().bind(control.sizeProperty()
+				.divide(400));
+		clock_text.scaleYProperty().bind(control.sizeProperty()
+				.divide(400));
 		clock_text.setOpacity(0);
 		FadeTransition ft_clock = new FadeTransition();
 		FadeTransition ft_text = new FadeTransition();
