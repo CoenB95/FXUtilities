@@ -17,6 +17,8 @@ public class ClockView extends Control {
 	public static final int MODE_ANALOG = 1;
 	public static final int MODE_DIGITAL = 2;
 	
+	public boolean animate_mode_change = true;
+	
 	private final IntegerProperty mode = new SimpleIntegerProperty(
 			MODE_ANALOG);
 	private final DoubleProperty size = new SimpleDoubleProperty(35);
@@ -60,7 +62,8 @@ public class ClockView extends Control {
 		colorProperty().set(c);
 	}
 	
-	public void setMode(int m) {
+	public void setMode(int m, boolean animate) {
+		animate_mode_change = animate;
 		mode.set(m);
 	}
 	

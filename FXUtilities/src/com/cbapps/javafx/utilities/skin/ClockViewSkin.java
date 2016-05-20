@@ -116,21 +116,31 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 		control.modeProperty().addListener((a,b,c) -> {
 			switch (c.intValue()) {
 			case ClockView.MODE_ANALOG:
-				ft_clock.setFromValue(clock.getOpacity());
-				ft_clock.setToValue(1);
-				ft_text.setFromValue(clock_text.getOpacity());
-				ft_text.setToValue(0);
-				animation.playFromStart();
-				ft_clock.playFromStart();
-				ft_text.playFromStart();
+				if (control.animate_mode_change) {
+					ft_clock.setFromValue(clock.getOpacity());
+					ft_clock.setToValue(1);
+					ft_text.setFromValue(clock_text.getOpacity());
+					ft_text.setToValue(0);
+					animation.playFromStart();
+					ft_clock.playFromStart();
+					ft_text.playFromStart();
+				} else {
+					clock.setOpacity(1);
+					clock_text.setOpacity(0);
+				}
 				break;
 			case ClockView.MODE_DIGITAL:
-				ft_clock.setFromValue(clock.getOpacity());
-				ft_clock.setToValue(0);
-				ft_text.setFromValue(clock_text.getOpacity());
-				ft_text.setToValue(1);
-				ft_clock.playFromStart();
-				ft_text.playFromStart();
+				if (control.animate_mode_change) {
+					ft_clock.setFromValue(clock.getOpacity());
+					ft_clock.setToValue(0);
+					ft_text.setFromValue(clock_text.getOpacity());
+					ft_text.setToValue(1);
+					ft_clock.playFromStart();
+					ft_text.playFromStart();
+				} else {
+					clock.setOpacity(0);
+					clock_text.setOpacity(1);
+				}
 				break;
 			}
 		});
