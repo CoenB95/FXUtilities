@@ -127,6 +127,7 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 				} else {
 					clock.setOpacity(1);
 					clock_text.setOpacity(0);
+					animProperty().set(0);
 					animation.playFromStart();
 				}
 				break;
