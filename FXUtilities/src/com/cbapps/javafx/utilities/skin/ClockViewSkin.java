@@ -58,42 +58,42 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 		arc.strokeProperty().bind(control.colorProperty());
 		Timeline animation = new Timeline(
 				new KeyFrame(Duration.ZERO,
-						new KeyValue(animProperty(), 0)),
+						new KeyValue(control.animProperty(), 0)),
 				new KeyFrame(Duration.millis(2000), 
-						new KeyValue(animProperty(), 1, 
+						new KeyValue(control.animProperty(), 1, 
 								new SmoothInterpolator(
 										AnimType.ACCELDECEL))));
 		animation.playFromStart();
-		arc.lengthProperty().bind(animProperty().multiply(-360));
+		arc.lengthProperty().bind(control.animProperty().multiply(-360));
 		Timeline time = new Timeline(
 				new KeyFrame(Duration.ZERO, 
-						new KeyValue(secondProperty(), 0)),
+						new KeyValue(control.secondProperty(), 0)),
 				new KeyFrame(Duration.seconds(60), event -> {
-					int m = minuteProperty().intValue() + 1;
+					int m = control.minuteProperty().intValue() + 1;
 					int h, hn;
-					h = hn = hourProperty().get();
+					h = hn = control.hourProperty().get();
 					while (m >= 60) {
 						m -= 60;
 						hn++;
 						if (hn >= 24) hn -= 24;
 					}
-					minuteProperty().set(m);
-					if (h != hn) hourProperty().set(hn);
-				}, new KeyValue(secondProperty(), 60)));
+					control.minuteProperty().set(m);
+					if (h != hn) control.hourProperty().set(hn);
+				}, new KeyValue(control.secondProperty(), 60)));
 		time.setCycleCount(Animation.INDEFINITE);
 		Calendar calendar = Calendar.getInstance();
 		time.playFrom(Duration.millis(calendar.get(Calendar.SECOND)
 				*1000 + calendar.get(Calendar.MILLISECOND)));
-		minuteProperty().set(calendar.get(Calendar.MINUTE));
-		hourProperty().set(calendar.get(Calendar.HOUR_OF_DAY));
-		Line sec_line = createLine(control, secondProperty(),
+		control.minuteProperty().set(calendar.get(Calendar.MINUTE));
+		control.hourProperty().set(calendar.get(Calendar.HOUR_OF_DAY));
+		Line sec_line = createLine(control, control.secondProperty(),
 				0.8, 0.3, 0.008, 60);
 				//animProperty().multiply(0.85), 60);
-		Line min_line = createLine(control, minuteProperty(),
+		Line min_line = createLine(control, control.minuteProperty(),
 				0.8, 0.1, 0.015, 60);
 				//animProperty().multiply(0.80), 60);
-		Line hour_line = createLine(control, hourProperty().add(
-				minuteProperty().divide(60)),
+		Line hour_line = createLine(control, control.hourProperty().add(
+				control.minuteProperty().divide(60)),
 				0.5, 0.1, 0.015, 12);
 				//animProperty().multiply(0.65), 12);
 		sec_line.setStroke(Color.RED);
@@ -127,7 +127,7 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 				} else {
 					clock.setOpacity(1);
 					clock_text.setOpacity(0);
-					animProperty().set(0);
+					control.animProperty().set(0);
 					animation.playFromStart();
 				}
 				break;
@@ -151,13 +151,13 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 		df.setMaximumFractionDigits(0);
 		df.setRoundingMode(RoundingMode.DOWN);
 		StringBinding sec_bind = Bindings.createStringBinding(() -> 
-		df.format(secondProperty().doubleValue())
-		, secondProperty());
+		df.format(control.secondProperty().doubleValue())
+		, control.secondProperty());
 		StringBinding min_bind = Bindings.createStringBinding(() -> 
-		df.format(minuteProperty().doubleValue())
-		, minuteProperty());
+		df.format(control.minuteProperty().doubleValue())
+		, control.minuteProperty());
 		clock_text.textProperty().bind(Bindings.concat(
-				hourProperty(), ":",min_bind,":", sec_bind));
+				control.hourProperty(), ":",min_bind,":", sec_bind));
 		pane.getChildren().addAll(clock, clock_text);
 		getChildren().add(pane);
 	}
@@ -172,38 +172,18 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 				.multiply(0.5));
 		line.startYProperty().bind(control.sizeProperty().multiply(
 				Bindings.multiply(0.4, Bindings.multiply(back_length,
-						animProperty())).add(0.5)));
+						control.animProperty())).add(0.5)));
 		line.endXProperty().bind(control.sizeProperty().multiply(0.5));
 		line.endYProperty().bind(control.sizeProperty().multiply(
 				Bindings.multiply(-0.4, Bindings.multiply(arm_length,
-				animProperty())).add(0.5)));
+						control.animProperty())).add(0.5)));
 		line.setStrokeLineCap(StrokeLineCap.ROUND);
 		Rotate rotation = new Rotate();
 		rotation.pivotXProperty().bind(control.sizeProperty().multiply(0.5));
 		rotation.pivotYProperty().bind(control.sizeProperty().multiply(0.5));
 		rotation.angleProperty().bind(property.multiply(360/divide)
-				.multiply(animProperty()));
+				.multiply(control.animProperty()));
 		line.getTransforms().add(rotation);
 		return line;
-	}
-
-	private DoubleProperty anim = new SimpleDoubleProperty(0);
-	public DoubleProperty animProperty() {
-		return anim;
-	}
-
-	private IntegerProperty hour = new SimpleIntegerProperty(0);
-	public IntegerProperty hourProperty() {
-		return hour;
-	}
-
-	private DoubleProperty minute = new SimpleDoubleProperty(0);
-	public DoubleProperty minuteProperty() {
-		return minute;
-	}
-
-	private DoubleProperty second = new SimpleDoubleProperty(0);
-	public DoubleProperty secondProperty() {
-		return second;
 	}
 }

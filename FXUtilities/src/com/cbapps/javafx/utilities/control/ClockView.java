@@ -37,6 +37,26 @@ public class ClockView extends Control {
 		return mode;
 	}
 	
+	private DoubleProperty anim = new SimpleDoubleProperty(0);
+	public DoubleProperty animProperty() {
+		return anim;
+	}
+
+	private IntegerProperty hour = new SimpleIntegerProperty(0);
+	public IntegerProperty hourProperty() {
+		return hour;
+	}
+
+	private DoubleProperty minute = new SimpleDoubleProperty(0);
+	public DoubleProperty minuteProperty() {
+		return minute;
+	}
+
+	private DoubleProperty second = new SimpleDoubleProperty(0);
+	public DoubleProperty secondProperty() {
+		return second;
+	}
+	
 	public ClockView() {
 		
 	}
