@@ -2,26 +2,18 @@ package com.cbapps.javafx.utilities.types;
 
 /**Utility class for converting types.*/
 public class Types {
-
+	
 	/**Converts Java's signed bytes to unsigned bytes (integers).
-	 * @param inputBuffer the input to be converted.
-	 * @return the converted result as a integer array.
+	 * @param value the input to be converted.
+	 * @return the converted result as a integer.
 	 */
-	public static int[] toUnsignedBytes(byte... inputBuffer) {
-        int[] outputBuffer = new int[inputBuffer.length];
-        for(int i = 0; i < inputBuffer.length; i++){
-            if(inputBuffer[i] < 0){
-                outputBuffer[i] = 256 + inputBuffer[i];
-            }
-            else {
-                outputBuffer[i] = inputBuffer[i];
-            }
-        }
-        return outputBuffer;
+	public static int toUnsignedBytes(byte value) {
+		if(value < 0) return 256 + value;
+		else return value;
 	}
 	
 	/**Converts unsigned bytes (wrapped as integers) to Java's
-	 * signed bytes.
+	 * signed bytes (= simply cast).
 	 * @param inputBuffer the input to be converted.
 	 * @return the converted result in a byte array.
 	 */
