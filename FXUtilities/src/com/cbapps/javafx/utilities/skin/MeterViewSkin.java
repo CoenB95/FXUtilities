@@ -21,9 +21,6 @@ public class MeterViewSkin extends SkinBase<MeterView> {
 
 	public MeterViewSkin(MeterView control) {
 		super(control);
-		control.setId("clockview");
-		control.getStylesheets().add("/com/cbapps/javafx/"
-				+ "utilities/styles/CleanTheme.css");
 		Line arrow = new Line();
 		Arc back = new Arc(50, 50, 50, 50, -45, 270);
 		back.setType(ArcType.ROUND);
