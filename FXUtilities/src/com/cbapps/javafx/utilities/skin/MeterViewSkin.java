@@ -63,7 +63,7 @@ public class MeterViewSkin extends SkinBase<MeterView> {
 		text.layoutYProperty().bind(back.centerYProperty().subtract(
 				back.radiusYProperty().multiply(0.8)));
 		text.textProperty().bind(Bindings.concat(control.valueProperty()
-				.asString("%.0f"), " ", control.unitProperty()));
+				.asString(control.textFormatProperty().get())));
 		Pane group = new Pane(back, text, arrow);
 		group.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
 		getChildren().add(group);

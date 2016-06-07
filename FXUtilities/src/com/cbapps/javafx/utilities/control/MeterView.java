@@ -15,7 +15,9 @@ import javafx.scene.paint.Paint;
 
 public class MeterView extends Control {
 	
-	private final StringProperty unit = new SimpleStringProperty("");
+	/**The format used to display the textual representation of this
+	 * Meter's {@link #valueProperty()}*/
+	private final StringProperty format = new SimpleStringProperty("%.0f");
 	
 	/**The angle of the meter's base, from 0-360.*/
 	private final DoubleProperty angle = new SimpleDoubleProperty(270);
@@ -52,8 +54,8 @@ public class MeterView extends Control {
 		return min;
 	}
 	
-	public StringProperty unitProperty() {
-		return unit;
+	public StringProperty textFormatProperty() {
+		return format;
 	}
 	
 	public DoubleProperty valueProperty() {
@@ -96,8 +98,8 @@ public class MeterView extends Control {
 		return minProperty().get();
 	}
 	
-	public String getUnit() {
-		return unitProperty().get();
+	public String getTextFormat() {
+		return textFormatProperty().get();
 	}
 	
 	public double getValue() {
@@ -120,8 +122,8 @@ public class MeterView extends Control {
 		minProperty().set(d);
 	}
 	
-	public void setUnit(String u) {
-		unitProperty().set(u);
+	public void setTextFormat(String u) {
+		textFormatProperty().set(u);
 	}
 	
 	public void setValue(double d) {
