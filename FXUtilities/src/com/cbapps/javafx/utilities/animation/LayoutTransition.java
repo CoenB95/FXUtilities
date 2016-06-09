@@ -3,7 +3,10 @@ package com.cbapps.javafx.utilities.animation;
 import com.cbapps.javafx.utilities.animation.SmoothInterpolator.AnimType;
 
 import javafx.animation.TranslateTransition;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.NumberExpression;
 import javafx.scene.Node;
+import javafx.scene.layout.Region;
 import javafx.util.Duration;
 
 /**This Transition animates the registered node between layout-position
@@ -41,5 +44,22 @@ public class LayoutTransition {
 			tty.playFromStart();
 			node.setTranslateY(delta);
 		});
+	}
+	
+	public static void registerGrow(Region region, NumberExpression width,
+			NumberExpression height, boolean respect_ratio) {
+		if (respect_ratio) {
+			region.scaleXProperty().bind(Bindings.min(width.divide(
+					region.widthProperty()),height.divide(
+							region.heightProperty())));
+			region.scaleYProperty().bind(Bindings.min(width.divide(
+					region.widthProperty()),height.divide(
+							region.heightProperty())));
+		} else {
+			region.scaleXProperty().bind(width.divide(
+					region.widthProperty()));
+			region.scaleYProperty().bind(height.divide(
+					region.heightProperty()));
+		}
 	}
 }
