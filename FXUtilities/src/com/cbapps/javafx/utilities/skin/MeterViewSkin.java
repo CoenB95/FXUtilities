@@ -1,5 +1,7 @@
 package com.cbapps.javafx.utilities.skin;
 
+import com.cbapps.javafx.utilities.animation.SmoothInterpolator;
+import com.cbapps.javafx.utilities.animation.SmoothInterpolator.AnimType;
 import com.cbapps.javafx.utilities.control.MeterView;
 
 import javafx.animation.KeyFrame;
@@ -35,20 +37,23 @@ public class MeterViewSkin extends SkinBase<MeterView> {
 				back.radiusYProperty()));
 		arrow.endXProperty().bind(arrow.startXProperty().add(40));
 		arrow.endYProperty().bind(arrow.startYProperty());
+		arrow.opacityProperty().bind(Bindings.when(
+				control.valueProperty().lessThan(control.minProperty()).or(
+				control.valueProperty().greaterThan(control.maxProperty())))
+				.then(0.2).otherwise(1));
 		Rotate rotate = new Rotate();
 		Timeline rotanim = new Timeline(
-				new KeyFrame(Duration.ZERO, 
-						new KeyValue(rotate.angleProperty(), 1)),
+				new KeyFrame(Duration.ZERO),
 				new KeyFrame(Duration.millis(400), 
 						new KeyValue(rotate.angleProperty(), 0)));
 		control.valueProperty().addListener((a,o,n) -> {
-			rotanim.getKeyFrames().set(0, new KeyFrame(Duration.millis(400),
-					new KeyValue(rotate.angleProperty(), 
-							control.valueProperty().divide(
-							control.maxProperty().subtract(
-							control.minProperty())).multiply(
-							control.angleProperty()).subtract(90).subtract(
-							control.angleProperty().divide(2)).get())));
+			if (control.getMin() >= control.getMax()) return;
+			rotanim.getKeyFrames().set(1, new KeyFrame(Duration.millis(400),
+					new KeyValue(rotate.angleProperty(),
+							(control.getValue()-control.getMin())/
+							(control.getMax()-control.getMin())*
+							control.getAngle()-90-(control.getAngle()/2)
+							, new SmoothInterpolator(AnimType.DECELERATE))));
 			rotanim.playFromStart();
 		});
 		rotate.pivotXProperty().bind(arrow.startXProperty());
