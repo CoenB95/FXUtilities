@@ -24,8 +24,12 @@ public class ClockView extends Control {
 	private final DoubleProperty size = new SimpleDoubleProperty(35);
 	private final ObjectProperty<Paint> color = 
 			new SimpleObjectProperty<Paint>(Color.BLACK);
+	
 	private final ObjectProperty<Paint> accent_color = 
 			new SimpleObjectProperty<Paint>(Color.BLACK);
+	
+	private final ObjectProperty<Paint> background_color = 
+			new SimpleObjectProperty<Paint>(Color.TRANSPARENT);
 	
 	public DoubleProperty sizeProperty() {
 		return size;
@@ -33,6 +37,10 @@ public class ClockView extends Control {
 	
 	public ObjectProperty<Paint> accentColorProperty() {
 		return accent_color;
+	}
+	
+	public ObjectProperty<Paint> backgroundColorProperty() {
+		return background_color;
 	}
 	
 	public ObjectProperty<Paint> colorProperty() {
@@ -76,6 +84,10 @@ public class ClockView extends Control {
 		return accentColorProperty().get();
 	}
 	
+	public Paint getBackgroundColor() {
+		return backgroundColorProperty().get();
+	}
+	
 	public Paint getColor() {
 		return colorProperty().get();
 	}
@@ -90,6 +102,10 @@ public class ClockView extends Control {
 	
 	public void setAccentColor(Paint c) {
 		accentColorProperty().set(c);
+	}
+	
+	public void setBackgroundColor(Paint c) {
+		backgroundColorProperty().set(c);
 	}
 	
 	public void setColor(Paint c) {

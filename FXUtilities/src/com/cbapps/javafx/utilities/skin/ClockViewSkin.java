@@ -50,7 +50,7 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 		arc.setStartAngle(90);
 		arc.strokeWidthProperty().bind(control.sizeProperty()
 				.multiply(0.02));
-		arc.setFill(Color.TRANSPARENT);
+		arc.fillProperty().bind(control.backgroundColorProperty());
 		arc.strokeProperty().bind(control.colorProperty());
 		Timeline animation = new Timeline(
 				new KeyFrame(Duration.ZERO,
