@@ -92,7 +92,7 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 				control.minuteProperty().divide(60)),
 				0.5, 0.1, 0.015, 12);
 				//animProperty().multiply(0.65), 12);
-		sec_line.setStroke(Color.RED);
+		sec_line.strokeProperty().bind(control.accentColorProperty());
 		min_line.strokeProperty().bind(control.colorProperty());
 		hour_line.strokeProperty().bind(control.colorProperty());
 		Group clock = new Group(rec, arc, hour_line,
