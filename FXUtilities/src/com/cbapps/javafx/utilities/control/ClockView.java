@@ -31,6 +31,9 @@ public class ClockView extends Control {
 	private final ObjectProperty<Paint> background_color = 
 			new SimpleObjectProperty<Paint>(Color.TRANSPARENT);
 	
+	private final ObjectProperty<Paint> text_color = 
+			new SimpleObjectProperty<Paint>(Color.TRANSPARENT);
+	
 	public DoubleProperty sizeProperty() {
 		return size;
 	}
@@ -45,6 +48,10 @@ public class ClockView extends Control {
 	
 	public ObjectProperty<Paint> colorProperty() {
 		return color;
+	}
+	
+	public ObjectProperty<Paint> textColorProperty() {
+		return text_color;
 	}
 	
 	public IntegerProperty modeProperty() {
@@ -92,6 +99,10 @@ public class ClockView extends Control {
 		return colorProperty().get();
 	}
 	
+	public Paint getTextColor() {
+		return textColorProperty().get();
+	}
+	
 	public int getMode() {
 		return mode.get();
 	}
@@ -110,6 +121,10 @@ public class ClockView extends Control {
 	
 	public void setColor(Paint c) {
 		colorProperty().set(c);
+	}
+	
+	public void setTextColor(Paint c) {
+		textColorProperty().set(c);
 	}
 	
 	public void setMode(int m, boolean animate) {

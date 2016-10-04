@@ -99,7 +99,7 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 				min_line, sec_line);
 		Label clock_text = new Label();
 		clock_text.setFont(Font.loadFont(RobotoFont.thin(), 70));
-		clock_text.textFillProperty().bind(control.colorProperty());
+		clock_text.textFillProperty().bind(control.textColorProperty());
 		clock_text.scaleXProperty().bind(control.sizeProperty()
 				.divide(400));
 		clock_text.scaleYProperty().bind(control.sizeProperty()
