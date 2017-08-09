@@ -7,7 +7,7 @@ import java.util.Calendar;
 import com.cbapps.javafx.utilities.animation.SmoothInterpolator;
 import com.cbapps.javafx.utilities.animation.SmoothInterpolator.AnimType;
 import com.cbapps.javafx.utilities.control.ClockView;
-import com.cbapps.javafx.utilities.resources.RobotoFont;
+import com.cbapps.javafx.utilities.font.RobotoFont;
 
 import javafx.animation.Animation;
 import javafx.animation.FadeTransition;
