@@ -2,64 +2,49 @@ package com.cbapps.javafx.utilities.animation;
 
 import com.cbapps.javafx.utilities.animation.SmoothInterpolator.AnimType;
 
+import javafx.animation.Interpolator;
+import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.NumberExpression;
 import javafx.scene.Node;
-import javafx.scene.layout.Region;
 import javafx.util.Duration;
 
 /**This Transition animates the registered node between layout-position
  * changes.*/
-public class LayoutTransition {
+public class LayoutTransition extends Transition {
 
-	private LayoutTransition() {
-		
+	private Node node;
+	private double deltaX;
+	private double deltaY;
+
+	public LayoutTransition(Node node) {
+		this(Duration.millis(400), node);
 	}
-	
-	/**Register a new LayoutTransition to this Node.
-	 * @param node the Node which should be animated.
-	 */
-	public static void register(Node node) {
-		TranslateTransition ttx = new TranslateTransition(new Duration(400),
-				node);
-		TranslateTransition tty = new TranslateTransition(new Duration(400),
-				node);
-		ttx.setToX(0);
-		tty.setToY(0);
-		ttx.setInterpolator(new SmoothInterpolator(AnimType.DECELERATE));
-		tty.setInterpolator(new SmoothInterpolator(AnimType.DECELERATE));
+
+	public LayoutTransition(Duration duration, Node node) {
+		this(duration, node, new SmoothInterpolator(AnimType.ACCELDECEL));
+	}
+
+	public LayoutTransition(Duration duration, Node node, Interpolator interpolator) {
+		this.node = node;
+		setCycleDuration(duration);
+		setInterpolator(interpolator);
 		node.layoutXProperty().addListener((a,b,c) -> {
-			if (Math.abs(c.doubleValue()-b.doubleValue()) < 25) return;
-			double delta = node.getTranslateX() + b.doubleValue() - 
-					c.doubleValue();
-			ttx.setFromX(delta);
-			ttx.playFromStart();
-			node.setTranslateX(delta);
+			deltaX = node.getTranslateX() + b.doubleValue() - c.doubleValue();
+			deltaY = node.getTranslateY();
+			if (getStatus() != Status.RUNNING || Math.abs(b.doubleValue() - c.doubleValue()) > 25) playFromStart();
+			node.setTranslateX(deltaX);
 		});
 		node.layoutYProperty().addListener((a,b,c) -> {
-			double delta = node.getTranslateY() + b.doubleValue() - 
-					c.doubleValue();
-			tty.setFromY(delta);
-			tty.playFromStart();
-			node.setTranslateY(delta);
+			deltaX = node.getTranslateX();
+			deltaY = node.getTranslateY() + b.doubleValue() - c.doubleValue();
+			if (getStatus() != Status.RUNNING || Math.abs(b.doubleValue() - c.doubleValue()) > 25) playFromStart();
+			node.setTranslateY(deltaY);
 		});
 	}
-	
-	public static void registerGrow(Region region, NumberExpression width,
-			NumberExpression height, boolean respect_ratio) {
-		if (respect_ratio) {
-			region.scaleXProperty().bind(Bindings.min(width.divide(
-					region.widthProperty()),height.divide(
-							region.heightProperty())));
-			region.scaleYProperty().bind(Bindings.min(width.divide(
-					region.widthProperty()),height.divide(
-							region.heightProperty())));
-		} else {
-			region.scaleXProperty().bind(width.divide(
-					region.widthProperty()));
-			region.scaleYProperty().bind(height.divide(
-					region.heightProperty()));
-		}
+
+	@Override
+	protected void interpolate(double frac) {
+		node.setTranslateX((1 - frac) * deltaX);
+		node.setTranslateY((1 - frac) * deltaY);
 	}
 }
