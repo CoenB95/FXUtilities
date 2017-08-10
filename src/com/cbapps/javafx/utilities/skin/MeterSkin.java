@@ -17,8 +17,6 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
-import java.util.IllegalFormatException;
-
 /**
  * @author Coen Boelhouwers
  */
@@ -41,9 +39,9 @@ public class MeterSkin extends SkinBase<MeterView> {
 		arc.centerYProperty().bind(pane.heightProperty().divide(2));
 		arc.typeProperty().bind(control.arcTypeProperty());
 		arc.setStrokeLineCap(StrokeLineCap.ROUND);
-		arc.strokeProperty().bind(control.strokeProperty());
+		arc.strokeProperty().bind(control.arcStrokeProperty());
 		arc.strokeWidthProperty().bind(arc.radiusYProperty().divide(10));
-		arc.fillProperty().bind(control.fillProperty());
+		arc.fillProperty().bind(control.arcFillProperty());
 
 		Label label = new Label("");
 		label.textProperty().bind(control.nameProperty());
@@ -81,8 +79,8 @@ public class MeterSkin extends SkinBase<MeterView> {
 				new LineTo(110, 0));
 		arrow.layoutXProperty().bind(pane.widthProperty().divide(2));
 		arrow.layoutYProperty().bind(pane.heightProperty().divide(2));
-		arrow.setStroke(Color.TRANSPARENT);
-		arrow.setFill(Color.GRAY);
+		arrow.strokeProperty().bind(control.arrowStrokeProperty());
+		arrow.fillProperty().bind(control.arrowFillProperty());
 
 		Scale sc = new Scale(1, 1, 0, 0);
 		sc.xProperty().bind(sc.yProperty());

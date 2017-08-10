@@ -19,7 +19,15 @@ public class MeterView extends Control {
 	/**The angle of the meter's base, from 0-360.*/
 	private DoubleProperty angle;
 
+	private ObjectProperty<Paint> arcFill;
+
+	private ObjectProperty<Paint> arcStroke;
+
 	private ObjectProperty<ArcType> arcType;
+
+	private ObjectProperty<Paint> arrowFill;
+
+	private ObjectProperty<Paint> arrowStroke;
 	
 	/**
      * The minimum value represented by this Meter. This must be a
@@ -33,7 +41,6 @@ public class MeterView extends Control {
      */
 	private DoubleProperty max;
 
-	private ObjectProperty<Paint> stroke;
 
 	/**
 	 * The format used to display the textual representation of this Meter's {@link #valueProperty()}.
@@ -47,8 +54,6 @@ public class MeterView extends Control {
      * The current value represented by this Meter.
      */
 	private DoubleProperty value;
-
-	private ObjectProperty<Paint> fill;
 
 	public MeterView() {
 
@@ -67,6 +72,20 @@ public class MeterView extends Control {
 		return angle;
 	}
 
+	public final ObjectProperty<Paint> arcFillProperty() {
+		if (arcFill == null) {
+			arcFill = new SimpleObjectProperty<>(Color.TRANSPARENT);
+		}
+		return arcFill;
+	}
+
+	public final ObjectProperty<Paint> arcStrokeProperty() {
+		if (arcStroke == null) {
+			arcStroke = new SimpleObjectProperty<>(Color.BLACK);
+		}
+		return arcStroke;
+	}
+
 	public final ObjectProperty<ArcType> arcTypeProperty() {
 		if (arcType == null) {
 			arcType = new SimpleObjectProperty<>(ArcType.OPEN);
@@ -74,11 +93,18 @@ public class MeterView extends Control {
 		return arcType;
 	}
 
-	public final ObjectProperty<Paint> fillProperty() {
-		if (fill == null) {
-			fill = new SimpleObjectProperty<>(Color.TRANSPARENT);
+	public final ObjectProperty<Paint> arrowFillProperty() {
+		if (arrowFill == null) {
+			arrowFill = new SimpleObjectProperty<>(Color.GRAY);
 		}
-		return fill;
+		return arrowFill;
+	}
+
+	public final ObjectProperty<Paint> arrowStrokeProperty() {
+		if (arrowStroke == null) {
+			arrowStroke = new SimpleObjectProperty<>(Color.TRANSPARENT);
+		}
+		return arrowStroke;
 	}
 
 	public final DoubleProperty maxProperty() {
@@ -129,13 +155,6 @@ public class MeterView extends Control {
 
 	public final StringProperty nameProperty() {
 		return name;
-	}
-
-	public final ObjectProperty<Paint> strokeProperty() {
-		if (stroke == null) {
-			stroke = new SimpleObjectProperty<>(Color.BLACK);
-		}
-		return stroke;
 	}
 
 	public final StringProperty textFormatProperty() {
@@ -202,12 +221,24 @@ public class MeterView extends Control {
 		return angleProperty().get();
 	}
 
-	public ArcType getArcType() {
-		return arcType.get();
+	public final Paint getArcFill() {
+		return arcFillProperty().get();
 	}
 
-	public final Paint getFill() {
-		return fill.get();
+	public final Paint getArcStroke() {
+		return arcStrokeProperty().get();
+	}
+
+	public final ArcType getArcType() {
+		return arcTypeProperty().get();
+	}
+
+	public final Paint getArrowFill() {
+		return arrowFillProperty().get();
+	}
+
+	public final Paint getArrowStroke() {
+		return arrowStrokeProperty().get();
 	}
 
 	public final double getMax() {
@@ -219,11 +250,7 @@ public class MeterView extends Control {
 	}
 
 	public final String getName() {
-		return name.get();
-	}
-
-	public final Paint getStroke() {
-		return strokeProperty().get();
+		return nameProperty().get();
 	}
 
 	public final String getTextFormat() {
@@ -238,12 +265,24 @@ public class MeterView extends Control {
 		angleProperty().set(d);
 	}
 
-	public void setArcType(ArcType arcType) {
-		this.arcType.set(arcType);
+	public final void setArcFill(Paint color) {
+		arcFillProperty().set(color);
 	}
 
-	public final void setFill(Paint color) {
-		fillProperty().set(color);
+	public final void setArcStroke(Paint c) {
+		arcStrokeProperty().set(c);
+	}
+
+	public final void setArcType(ArcType arcType) {
+		this.arcTypeProperty().set(arcType);
+	}
+
+	public final void setArrowFill(Paint arrowFill) {
+		arrowFillProperty().set(arrowFill);
+	}
+
+	public final void setArrowStroke(Paint arrowStroke) {
+		arrowStrokeProperty().set(arrowStroke);
 	}
 
 	public final void setMax(double d) {
@@ -255,11 +294,7 @@ public class MeterView extends Control {
 	}
 
 	public final void setName(String name) {
-		this.name.set(name);
-	}
-
-	public final void setStroke(Paint c) {
-		strokeProperty().set(c);
+		nameProperty().set(name);
 	}
 
 	public final void setTextFormat(String u) {
