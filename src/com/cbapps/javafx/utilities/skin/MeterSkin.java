@@ -6,6 +6,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.Pane;
@@ -54,8 +55,10 @@ public class MeterSkin extends SkinBase<MeterView> {
 		label.scaleYProperty().bind(arc.radiusYProperty().multiply(0.025));
 
 		Label valueText = new Label();
-		control.textFormatProperty().addListener((v1, v2, v3) ->
-				valueText.textProperty().bind(Bindings.format(v3, control.valueProperty())));
+		ChangeListener<String> formatListener = (v1, v2, v3) ->
+				valueText.textProperty().bind(Bindings.format(v3, control.valueProperty()));
+		formatListener.changed(null, null, control.getTextFormat());
+		control.textFormatProperty().addListener(formatListener);
 		valueText.layoutXProperty().bind(pane.widthProperty().divide(2).subtract(valueText.widthProperty().divide(2)));
 		valueText.layoutYProperty().bind(pane.heightProperty().subtract(valueText.heightProperty())
 				.subtract(valueText.heightProperty().multiply(valueText.scaleYProperty())
@@ -76,19 +79,21 @@ public class MeterSkin extends SkinBase<MeterView> {
 		Scale sc = new Scale(1, 1, 0, 0);
 		sc.xProperty().bind(sc.yProperty());
 		sc.yProperty().bind(arc.radiusYProperty().divide(100));
-		Rotate rt = new Rotate(-230, 0, 0);
-		control.valueProperty().addListener((v1, v2, v3) -> {
+		Rotate rt = new Rotate(0, 0, 0);
+		ChangeListener<Number> valueListener = (v1, v2, v3) -> {
 			System.out.println("move to " + (arc.getStartAngle() + arc.getLength() -
 					(v3.doubleValue() / (control.getMax() - control.getMin()) * arc.getLength())) + " deg");
 				new Timeline(
 						new KeyFrame(Duration.ZERO,
 								new KeyValue(rt.angleProperty(), rt.getAngle())),
 						new KeyFrame(Duration.millis(400),
-								new KeyValue(rt.angleProperty(), arc.getStartAngle() + (arc.getLength() -
+								new KeyValue(rt.angleProperty(), -arc.getStartAngle() - (arc.getLength() -
 										(v3.doubleValue() / (control.getMax() - control.getMin()) * arc.getLength())),
 										new SmoothInterpolator(SmoothInterpolator.AnimType.ACCELDECEL)))
-				).playFromStart();}
-		);
+				).playFromStart();
+		};
+		valueListener.changed(null, null, Double.isNaN(control.getValue()) ? 0 : control.getValue());
+		control.valueProperty().addListener(valueListener);
 		arrow.getTransforms().addAll(rt, sc);
 
 		pane.getChildren().addAll(label, valueText, arc, arrow);
