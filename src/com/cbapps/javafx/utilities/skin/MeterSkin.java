@@ -17,6 +17,8 @@ import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
 import javafx.util.Duration;
 
+import java.util.IllegalFormatException;
+
 /**
  * @author Coen Boelhouwers
  */
@@ -37,11 +39,11 @@ public class MeterSkin extends SkinBase<MeterView> {
 		arc.radiusYProperty().bind(Bindings.min(pane.widthProperty(), pane.heightProperty()).multiply(0.35));
 		arc.centerXProperty().bind(pane.widthProperty().divide(2));
 		arc.centerYProperty().bind(pane.heightProperty().divide(2));
-		arc.setType(ArcType.OPEN);
+		arc.typeProperty().bind(control.arcTypeProperty());
 		arc.setStrokeLineCap(StrokeLineCap.ROUND);
-		arc.setStroke(Color.GREEN);
+		arc.strokeProperty().bind(control.strokeProperty());
 		arc.strokeWidthProperty().bind(arc.radiusYProperty().divide(10));
-		arc.setFill(Color.TRANSPARENT);
+		arc.fillProperty().bind(control.fillProperty());
 
 		Label label = new Label("");
 		label.textProperty().bind(control.nameProperty());
@@ -55,8 +57,14 @@ public class MeterSkin extends SkinBase<MeterView> {
 		label.scaleYProperty().bind(arc.radiusYProperty().multiply(0.025));
 
 		Label valueText = new Label();
-		ChangeListener<String> formatListener = (v1, v2, v3) ->
+		ChangeListener<String> formatListener = (v1, v2, v3) -> {
+			if (v3 == null) {
+				valueText.setVisible(false);
+			} else {
 				valueText.textProperty().bind(Bindings.format(v3, control.valueProperty()));
+				valueText.setVisible(true);
+			}
+		};
 		formatListener.changed(null, null, control.getTextFormat());
 		control.textFormatProperty().addListener(formatListener);
 		valueText.layoutXProperty().bind(pane.widthProperty().divide(2).subtract(valueText.widthProperty().divide(2)));
