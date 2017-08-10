@@ -1,184 +1,168 @@
 package com.cbapps.javafx.utilities.skin;
 
-import java.math.RoundingMode;
-import java.text.DecimalFormat;
-import java.util.Calendar;
-
 import com.cbapps.javafx.utilities.animation.SmoothInterpolator;
 import com.cbapps.javafx.utilities.animation.SmoothInterpolator.AnimType;
 import com.cbapps.javafx.utilities.control.ClockView;
 import com.cbapps.javafx.utilities.font.RobotoFont;
-
-import javafx.animation.Animation;
-import javafx.animation.FadeTransition;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.animation.*;
+import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberExpression;
-import javafx.beans.binding.StringBinding;
-import javafx.scene.Group;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Arc;
 import javafx.scene.shape.Line;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.text.Font;
 import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Scale;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class ClockViewSkin extends SkinBase<ClockView> {
+
+	private static final Duration CLOCK_ANIM_DURATION = Duration.millis(2000);
 
 	public ClockViewSkin(ClockView control) {
 		super(control);
 		control.getStylesheets().setAll("/styles/CleanTheme.css");
 		control.getStyleClass().setAll("clockview");
 		StackPane pane = new StackPane();
-		Rectangle rec = new Rectangle();
-		rec.widthProperty().bind(control.sizeProperty());
-		rec.heightProperty().bind(control.sizeProperty());
-		rec.setFill(Color.TRANSPARENT);
+		pane.setOnMouseClicked(event -> control.setMode(control.getMode() == ClockView.Mode.DIGITAL ?
+				ClockView.Mode.ANALOG : ClockView.Mode.DIGITAL));
+		Pane clockPane = new Pane();
 		Arc arc = new Arc();
-		arc.centerXProperty().bind(control.sizeProperty().multiply(0.5));
-		arc.centerYProperty().bind(control.sizeProperty().multiply(0.5));
-		arc.radiusXProperty().bind(control.sizeProperty().multiply(0.4));
-		arc.radiusYProperty().bind(control.sizeProperty().multiply(0.4));
+		arc.centerXProperty().bind(pane.widthProperty().divide(2));
+		arc.centerYProperty().bind(pane.heightProperty().divide(2));
+		arc.radiusXProperty().bind(arc.radiusYProperty());
+		arc.radiusYProperty().bind(Bindings.min(pane.widthProperty(), pane.heightProperty()).multiply(0.45));
 		arc.setStartAngle(90);
-		arc.strokeWidthProperty().bind(control.sizeProperty()
-				.multiply(0.02));
-		arc.fillProperty().bind(control.backgroundColorProperty());
-		arc.strokeProperty().bind(control.colorProperty());
-		Timeline animation = new Timeline(
+		arc.strokeWidthProperty().bind(arc.radiusYProperty().multiply(0.02));
+		arc.fillProperty().bind(control.arcFillProperty());
+		arc.strokeProperty().bind(control.arcStrokeProperty());
+
+		Arrow secondArrow = new Arrow(0.008)
+				.bindAngle(control.secondProperty().divide(60.0).multiply(360.0))
+				.bindLength(arc.radiusYProperty().multiply(0.8));
+		secondArrow.strokeProperty().bind(control.secondArrowStrokeProperty());
+		secondArrow.layoutXProperty().bind(pane.widthProperty().divide(2));
+		secondArrow.layoutYProperty().bind(pane.heightProperty().divide(2));
+		Arrow minuteArrow = new Arrow(0.015)
+				.bindAngle(control.minuteProperty().divide(60.0).multiply(360.0))
+				.bindLength(arc.radiusYProperty().multiply(0.8));
+		minuteArrow.strokeProperty().bind(control.minuteArrowStrokeProperty());
+		minuteArrow.layoutXProperty().bind(pane.widthProperty().divide(2));
+		minuteArrow.layoutYProperty().bind(pane.heightProperty().divide(2));
+		Arrow hourArrow = new Arrow(0.015)
+				.bindAngle(control.hourProperty().divide(24.0).multiply(360.0))
+				.bindLength(arc.radiusYProperty().multiply(0.8));
+		hourArrow.strokeProperty().bind(control.hourArrowStrokeProperty());
+		hourArrow.layoutXProperty().bind(pane.widthProperty().divide(2));
+		hourArrow.layoutYProperty().bind(pane.heightProperty().divide(2));
+
+		clockPane.getChildren().setAll(arc, hourArrow, minuteArrow, secondArrow);
+		Label clockText = new Label();
+		clockText.setFont(RobotoFont.thin(70));
+		clockText.textProperty().bind(Bindings.format("%d:%02d:%02d",
+				control.hourProperty(), control.minuteProperty(),
+				Bindings.createIntegerBinding(control::getSecond, control.secondProperty())));
+		clockText.textFillProperty().bind(control.textFillProperty());
+		clockText.scaleXProperty().bind(clockText.scaleYProperty());
+		clockText.scaleYProperty().bind(arc.radiusYProperty().multiply(0.007));
+		clockText.setOpacity(0);
+
+		Interpolator interpolator = new SmoothInterpolator(AnimType.ACCELDECEL);
+		Timeline clockEnterAnimation = new Timeline(
 				new KeyFrame(Duration.ZERO,
-						new KeyValue(control.animProperty(), 0)),
-				new KeyFrame(Duration.millis(2000), 
-						new KeyValue(control.animProperty(), 1, 
-								new SmoothInterpolator(
-										AnimType.ACCELDECEL))));
-		animation.playFromStart();
-		arc.lengthProperty().bind(control.animProperty().multiply(-360));
-		Timeline time = new Timeline(
-				new KeyFrame(Duration.ZERO, 
-						new KeyValue(control.secondProperty(), 0)),
-				new KeyFrame(Duration.seconds(60), event -> {
-					int m = control.minuteProperty().intValue() + 1;
-					int h, hn;
-					h = hn = control.hourProperty().get();
-					while (m >= 60) {
-						m -= 60;
-						hn++;
-						if (hn >= 24) hn -= 24;
+						new KeyValue(arc.lengthProperty(), 0),
+						new KeyValue(hourArrow.scale.yProperty(), 0),
+						new KeyValue(minuteArrow.scale.yProperty(), 0),
+						new KeyValue(secondArrow.scale.yProperty(), 0)),
+				new KeyFrame(CLOCK_ANIM_DURATION,
+						new KeyValue(arc.lengthProperty(), -360, interpolator),
+						new KeyValue(hourArrow.scale.yProperty(), 1, interpolator),
+						new KeyValue(minuteArrow.scale.yProperty(), 1, interpolator),
+						new KeyValue(secondArrow.scale.yProperty(), 1, interpolator)));
+
+		FadeTransition ftClock = new FadeTransition(Duration.millis(400), clockPane);
+		FadeTransition ftText = new FadeTransition(Duration.millis(400), clockText);
+		ChangeListener<ClockView.Mode> modeListener = (a, b, c) -> {
+			switch (c) {
+				case ANALOG:
+					if (control.animateModeChanges()) {
+						ftClock.setFromValue(0);
+						ftClock.setToValue(1);
+						ftClock.setDelay(Duration.ZERO);
+						ftText.setFromValue(1);
+						ftText.setToValue(0);
+						ftText.setDelay(Duration.ZERO);
+						clockEnterAnimation.playFromStart();
+						ftClock.playFromStart();
+						ftText.playFromStart();
+					} else {
+						clockPane.setOpacity(1);
+						clockText.setOpacity(0);
 					}
-					control.minuteProperty().set(m);
-					if (h != hn) control.hourProperty().set(hn);
-				}, new KeyValue(control.secondProperty(), 60)));
-		time.setCycleCount(Animation.INDEFINITE);
-		Calendar calendar = Calendar.getInstance();
-		time.playFrom(Duration.millis(calendar.get(Calendar.SECOND)
-				*1000 + calendar.get(Calendar.MILLISECOND)));
-		control.minuteProperty().set(calendar.get(Calendar.MINUTE));
-		control.hourProperty().set(calendar.get(Calendar.HOUR_OF_DAY));
-		Line sec_line = createLine(control, control.secondProperty(),
-				0.8, 0.3, 0.008, 60);
-				//animProperty().multiply(0.85), 60);
-		Line min_line = createLine(control, control.minuteProperty(),
-				0.8, 0.1, 0.015, 60);
-				//animProperty().multiply(0.80), 60);
-		Line hour_line = createLine(control, control.hourProperty().add(
-				control.minuteProperty().divide(60)),
-				0.5, 0.1, 0.015, 12);
-				//animProperty().multiply(0.65), 12);
-		sec_line.strokeProperty().bind(control.accentColorProperty());
-		min_line.strokeProperty().bind(control.colorProperty());
-		hour_line.strokeProperty().bind(control.colorProperty());
-		Group clock = new Group(rec, arc, hour_line,
-				min_line, sec_line);
-		Label clock_text = new Label();
-		clock_text.setFont(RobotoFont.thin(70));
-		clock_text.textFillProperty().bind(control.textColorProperty());
-		clock_text.scaleXProperty().bind(control.sizeProperty()
-				.divide(400));
-		clock_text.scaleYProperty().bind(control.sizeProperty()
-				.divide(400));
-		clock_text.setOpacity(0);
-		FadeTransition ft_clock = new FadeTransition();
-		FadeTransition ft_text = new FadeTransition();
-		ft_clock.setNode(clock);
-		ft_text.setNode(clock_text);
-		control.modeProperty().addListener((a,b,c) -> {
-			switch (c.intValue()) {
-			case ClockView.MODE_ANALOG:
-				if (control.animate_mode_change) {
-					ft_clock.setFromValue(clock.getOpacity());
-					ft_clock.setToValue(1);
-					ft_text.setFromValue(clock_text.getOpacity());
-					ft_text.setToValue(0);
-					animation.playFromStart();
-					ft_clock.playFromStart();
-					ft_text.playFromStart();
-				} else {
-					clock.setOpacity(1);
-					clock_text.setOpacity(0);
-					control.animProperty().set(0);
-					animation.playFromStart();
-				}
-				break;
-			case ClockView.MODE_DIGITAL:
-				if (control.animate_mode_change) {
-					ft_clock.setFromValue(clock.getOpacity());
-					ft_clock.setToValue(0);
-					ft_text.setFromValue(clock_text.getOpacity());
-					ft_text.setToValue(1);
-					ft_clock.playFromStart();
-					ft_text.playFromStart();
-				} else {
-					clock.setOpacity(0);
-					clock_text.setOpacity(1);
-				}
-				break;
+					break;
+				case DIGITAL:
+					if (control.animateModeChanges()) {
+						ftClock.setFromValue(1);
+						ftClock.setToValue(0);
+						ftClock.setDelay(CLOCK_ANIM_DURATION);
+						ftText.setFromValue(0);
+						ftText.setToValue(1);
+						ftText.setDelay(CLOCK_ANIM_DURATION);
+						clockEnterAnimation.setRate(-Math.abs(clockEnterAnimation.getRate()));
+						clockEnterAnimation.jumpTo(CLOCK_ANIM_DURATION);
+						clockEnterAnimation.setDelay(Duration.ZERO);
+						clockEnterAnimation.play();
+						ftClock.playFromStart();
+						ftText.playFromStart();
+					} else {
+						clockPane.setOpacity(0);
+						clockText.setOpacity(1);
+					}
+					break;
 			}
-		});
-		DecimalFormat df = new DecimalFormat();
-		df.setMinimumIntegerDigits(2);
-		df.setMaximumFractionDigits(0);
-		df.setRoundingMode(RoundingMode.DOWN);
-		StringBinding sec_bind = Bindings.createStringBinding(() -> 
-		df.format(control.secondProperty().doubleValue())
-		, control.secondProperty());
-		StringBinding min_bind = Bindings.createStringBinding(() -> 
-		df.format(control.minuteProperty().doubleValue())
-		, control.minuteProperty());
-		clock_text.textProperty().bind(Bindings.concat(
-				control.hourProperty(), ":",min_bind,":", sec_bind));
-		pane.getChildren().addAll(clock, clock_text);
+		};
+		modeListener.changed(null, null, control.getMode());
+		control.modeProperty().addListener(modeListener);
+		pane.getChildren().addAll(clockPane, clockText);
+		pane.setPrefSize(50, 50);
 		getChildren().add(pane);
 	}
 
-	private Line createLine(ClockView control, NumberExpression property,
-			double arm_length, double back_length, 
-			double stroke_weigth, int divide) {
-		Line line = new Line();
-		line.strokeWidthProperty().bind(control.sizeProperty()
-				.multiply(stroke_weigth));
-		line.startXProperty().bind(control.sizeProperty()
-				.multiply(0.5));
-		line.startYProperty().bind(control.sizeProperty().multiply(
-				Bindings.multiply(0.4, Bindings.multiply(back_length,
-						control.animProperty())).add(0.5)));
-		line.endXProperty().bind(control.sizeProperty().multiply(0.5));
-		line.endYProperty().bind(control.sizeProperty().multiply(
-				Bindings.multiply(-0.4, Bindings.multiply(arm_length,
-						control.animProperty())).add(0.5)));
-		line.setStrokeLineCap(StrokeLineCap.ROUND);
-		Rotate rotation = new Rotate();
-		rotation.pivotXProperty().bind(control.sizeProperty().multiply(0.5));
-		rotation.pivotYProperty().bind(control.sizeProperty().multiply(0.5));
-		rotation.angleProperty().bind(property.multiply(360/divide)
-				.multiply(control.animProperty()));
-		line.getTransforms().add(rotation);
-		return line;
+	private static class Arrow extends Line {
+
+		private DoubleProperty length = new SimpleDoubleProperty();
+		private DoubleProperty angle = new SimpleDoubleProperty();
+		private Scale scale = new Scale(1, 1, 0, 0);
+
+		public Arrow(double widthToLengthRatio) {
+			strokeWidthProperty().bind(length.multiply(widthToLengthRatio));
+			setStartX(0);
+			startYProperty().bind(length.negate());
+			setEndX(0);
+			endYProperty().bind(length.multiply(0.1));
+			setStrokeLineCap(StrokeLineCap.ROUND);
+			Rotate rotation = new Rotate(0, 0, 0);
+			rotation.angleProperty().bind(scale.yProperty().multiply(angle));
+			getTransforms().addAll(rotation, scale);
+		}
+
+		public Arrow bindAngle(NumberExpression value) {
+			angle.bind(value);
+			return this;
+		}
+
+		public Arrow bindLength(NumberExpression value) {
+			length.bind(value);
+			return this;
+		}
 	}
 }

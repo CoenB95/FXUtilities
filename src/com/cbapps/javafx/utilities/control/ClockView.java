@@ -1,146 +1,200 @@
 package com.cbapps.javafx.utilities.control;
 
 import com.cbapps.javafx.utilities.skin.ClockViewSkin;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.beans.property.*;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
+import javafx.util.Duration;
+
+import java.time.LocalTime;
 
 public class ClockView extends Control {
 
-	public static final int MODE_ANALOG = 1;
-	public static final int MODE_DIGITAL = 2;
-	
-	public boolean animate_mode_change = true;
-	
-	private final IntegerProperty mode = new SimpleIntegerProperty(
-			MODE_ANALOG);
-	private final DoubleProperty size = new SimpleDoubleProperty(35);
-	private final ObjectProperty<Paint> color = 
-			new SimpleObjectProperty<Paint>(Color.BLACK);
-	
-	private final ObjectProperty<Paint> accent_color = 
-			new SimpleObjectProperty<Paint>(Color.BLACK);
-	
-	private final ObjectProperty<Paint> background_color = 
-			new SimpleObjectProperty<Paint>(Color.TRANSPARENT);
-	
-	private final ObjectProperty<Paint> text_color = 
-			new SimpleObjectProperty<Paint>(Color.TRANSPARENT);
-	
-	public DoubleProperty sizeProperty() {
-		return size;
-	}
-	
-	public ObjectProperty<Paint> accentColorProperty() {
-		return accent_color;
-	}
-	
-	public ObjectProperty<Paint> backgroundColorProperty() {
-		return background_color;
-	}
-	
-	public ObjectProperty<Paint> colorProperty() {
-		return color;
-	}
-	
-	public ObjectProperty<Paint> textColorProperty() {
-		return text_color;
-	}
-	
-	public IntegerProperty modeProperty() {
-		return mode;
-	}
-	
-	private DoubleProperty anim = new SimpleDoubleProperty(0);
-	public DoubleProperty animProperty() {
-		return anim;
+	private final BooleanProperty animateModeChange = new SimpleBooleanProperty(true);
+	private final ObjectProperty<Paint> arcFill = new SimpleObjectProperty<Paint>(Color.TRANSPARENT);
+	private final ObjectProperty<Paint> arcStroke = new SimpleObjectProperty<Paint>(Color.BLACK);
+	private final IntegerProperty hour = new SimpleIntegerProperty(0);
+	private final ObjectProperty<Paint> hourArrowStroke = new SimpleObjectProperty<Paint>(Color.BLACK);
+	private final IntegerProperty minute = new SimpleIntegerProperty(0);
+	private final ObjectProperty<Paint> minuteArrowStroke = new SimpleObjectProperty<Paint>(Color.BLACK);
+	private final ObjectProperty<Mode> mode = new SimpleObjectProperty<>(Mode.ANALOG);
+	private final DoubleProperty second = new SimpleDoubleProperty(0);
+	private final ObjectProperty<Paint> secondArrowStroke = new SimpleObjectProperty<Paint>(Color.BLACK);
+	private final ObjectProperty<Paint> textFill = new SimpleObjectProperty<Paint>(Color.BLACK);
+
+	private LocalTime time;
+	private Timeline timeline;
+
+	public BooleanProperty animateModeChangeProperty() {
+		return animateModeChange;
 	}
 
-	private IntegerProperty hour = new SimpleIntegerProperty(0);
+	public ObjectProperty<Paint> arcFillProperty() {
+		return arcFill;
+	}
+
+	public ObjectProperty<Paint> arcStrokeProperty() {
+		return arcStroke;
+	}
+
 	public IntegerProperty hourProperty() {
 		return hour;
 	}
 
-	private DoubleProperty minute = new SimpleDoubleProperty(0);
-	public DoubleProperty minuteProperty() {
+	public ObjectProperty<Paint> hourArrowStrokeProperty() {
+		return hourArrowStroke;
+	}
+
+	public IntegerProperty minuteProperty() {
 		return minute;
 	}
 
-	private DoubleProperty second = new SimpleDoubleProperty(0);
+	public ObjectProperty<Paint> minuteArrowStrokeProperty() {
+		return minuteArrowStroke;
+	}
+
+	public ObjectProperty<Mode> modeProperty() {
+		return mode;
+	}
+
 	public DoubleProperty secondProperty() {
 		return second;
 	}
-	
+
+	public ObjectProperty<Paint> secondArrowStrokeProperty() {
+		return secondArrowStroke;
+	}
+
+	public ObjectProperty<Paint> textFillProperty() {
+		return textFill;
+	}
+
 	public ClockView() {
-		
+		timeline = new Timeline(
+				new KeyFrame(Duration.ZERO,
+						new KeyValue(secondProperty(), 0)),
+				new KeyFrame(Duration.seconds(60), event -> {
+					setMinute((getMinute() + 1) % 60);
+					if (getMinute() == 0) setHour((getHour() + 1) % 24);
+				}, new KeyValue(secondProperty(), 60))
+		);
+		timeline.setCycleCount(Animation.INDEFINITE);
+		setTime(LocalTime.now());
+		run(true);
 	}
 	
 	@Override
 	protected Skin<?> createDefaultSkin() {
 		return new ClockViewSkin(this);
 	}
-	
-	public Paint getAccentColor() {
-		return accentColorProperty().get();
+
+	public boolean animateModeChanges() {
+		return animateModeChangeProperty().get();
 	}
-	
-	public Paint getBackgroundColor() {
-		return backgroundColorProperty().get();
+
+	public Paint getArcFill() {
+		return arcFillProperty().get();
 	}
-	
-	public Paint getColor() {
-		return colorProperty().get();
+
+	public Paint getArcStroke() {
+		return arcStrokeProperty().get();
 	}
-	
-	public Paint getTextColor() {
-		return textColorProperty().get();
+
+	public int getHour() {
+		return hourProperty().get();
 	}
-	
-	public int getMode() {
-		return mode.get();
+
+	public Paint getHourArrowStroke() {
+		return hourArrowStrokeProperty().get();
 	}
-	
-	public double getSize() {
-		return sizeProperty().get();
+
+	public int getMinute() {
+		return minuteProperty().get();
 	}
-	
-	public void setAccentColor(Paint c) {
-		accentColorProperty().set(c);
+
+	public Paint getMinuteArrowStroke() {
+		return minuteArrowStrokeProperty().get();
 	}
-	
-	public void setBackgroundColor(Paint c) {
-		backgroundColorProperty().set(c);
+
+	public Mode getMode() {
+		return modeProperty().get();
 	}
-	
-	public void setColor(Paint c) {
-		colorProperty().set(c);
+
+	public int getSecond() {
+		return (int) Math.floor(secondProperty().get());
 	}
-	
-	public void setTextColor(Paint c) {
-		textColorProperty().set(c);
+
+	public Paint getSecondArrowStroke() {
+		return secondArrowStrokeProperty().get();
 	}
-	
-	public void setMode(int m, boolean animate) {
-		animate_mode_change = animate;
-		mode.set(m);
+
+	public Paint getTextFill() {
+		return textFillProperty().get();
 	}
-	
-	public void setSize(double d) {
-		sizeProperty().set(d);
+
+	public void run(boolean value) {
+		if (value) timeline.playFrom(Duration.millis(time.getSecond() * 1000 + time.getNano() / 1_000_000));
+		else timeline.pause();
 	}
-	
-	/**Switch to the next mode.*/
-	public void toggleMode() {
-		int m = mode.get();
-		if (m == MODE_ANALOG) m = MODE_DIGITAL;
-		else m = MODE_ANALOG;
-		mode.set(m);
+
+	public void setAnimateModeChange(boolean animateModeChange) {
+		this.animateModeChangeProperty().set(animateModeChange);
+	}
+
+	public void setArcFill(Paint arcFill) {
+		this.arcFillProperty().set(arcFill);
+	}
+
+	public void setArcStroke(Paint arcStroke) {
+		this.arcStrokeProperty().set(arcStroke);
+	}
+
+	public void setHour(int hour) {
+		this.hourProperty().set(hour);
+	}
+
+	public void setHourArrowStroke(Paint hourArrowStroke) {
+		this.hourArrowStrokeProperty().set(hourArrowStroke);
+	}
+
+	public void setMinute(int minute) {
+		this.minuteProperty().set(minute);
+	}
+
+	public void setMinuteArrowStroke(Paint minuteArrowStroke) {
+		this.minuteArrowStrokeProperty().set(minuteArrowStroke);
+	}
+
+	public void setMode(Mode mode) {
+		this.modeProperty().set(mode);
+	}
+
+	public void setSecond(int second) {
+		this.secondProperty().set(second);
+	}
+
+	public void setSecondArrowStroke(Paint secondArrowStroke) {
+		this.secondArrowStrokeProperty().set(secondArrowStroke);
+	}
+
+	public void setTextFill(Paint textFill) {
+		this.textFillProperty().set(textFill);
+	}
+
+	public void setTime(LocalTime time) {
+		this.time = time;
+		setHour(time.getHour());
+		setMinute(time.getMinute());
+		setSecond(time.getSecond());
+	}
+
+	public enum Mode {
+		ANALOG, DIGITAL
 	}
 }
