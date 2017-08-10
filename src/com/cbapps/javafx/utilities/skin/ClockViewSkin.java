@@ -34,9 +34,8 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 
 	public ClockViewSkin(ClockView control) {
 		super(control);
-		control.setId("clockview");
-		control.getStylesheets().add("/com/cbapps/javafx/"
-				+ "utilities/styles/CleanTheme.css");
+		control.getStylesheets().setAll("/styles/CleanTheme.css");
+		control.getStyleClass().setAll("clockview");
 		StackPane pane = new StackPane();
 		Rectangle rec = new Rectangle();
 		rec.widthProperty().bind(control.sizeProperty());

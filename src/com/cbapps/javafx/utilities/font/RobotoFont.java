@@ -18,8 +18,7 @@ public class RobotoFont {
 	}
 
 	private static void checkLoaded() {
-		if (!loaded)
-			throw new IllegalStateException("Font files are not loaded. Did you forget to call RobotoFont.load()?");
+		if (!loaded) load();
 	}
 
 	public static RobotoFont load() {

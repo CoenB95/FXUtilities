@@ -1,4 +1,4 @@
-#cardview {
+.cardview {
 	-fx-border-color: transparent;
 	-fx-background-color: white;
 	-fx-background-radius: 2;
@@ -6,35 +6,35 @@
 	-fx-effect: dropshadow(three-pass-box, black, 10, 0, 0, 0);
 }
 
-#cardview:hover {
+.cardview:hover {
 	-fx-border-color: transparent;
 	-fx-background-color: derive(white, -10%); 
 }
 
-#cardview:pressed {
+.cardview:pressed {
 	-fx-border-color: transparent;
 	-fx-background-color: derive(white, -20%); 
 }
 
-#cardview:focused {
+.cardview:focused {
 	-fx-border-color: -fx-accent;
 }
 
-#clockview {
+.clockview {
 	-fx-border-color: transparent;
 	-fx-background-color: rgba(255,255,255,0);
 }
 
-#clockview:hover {
+.clockview:hover {
 	-fx-border-color: transparent;
 	-fx-background-color: rgba(255,255,255,0.15); 
 }
 
-#clockview:pressed {
+.clockview:pressed {
 	-fx-border-color: transparent;
 	-fx-background-color: rgba(255,255,255,0.30); 
 }
 
-#clockview:focused {
+.clockview:focused {
 	-fx-border-color: -fx-accent;
 }

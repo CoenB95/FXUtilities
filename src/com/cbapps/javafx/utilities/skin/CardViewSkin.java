@@ -17,9 +17,8 @@ public class CardViewSkin extends SkinBase<CardView> {
 	
 	public static VBox createSkin(CardView control) {
 		VBox box = new VBox();
-		control.setId("cardview");
-		control.getStylesheets().add("/com/cbapps/javafx/"
-				+ "utilities/styles/CleanTheme.css");
+		control.getStylesheets().setAll("/styles/CleanTheme.css");
+		control.getStyleClass().setAll("cardview");
 		box.setPadding(new Insets(5));
 		Label titleLabel = new Label();
 		VBox.setMargin(titleLabel, new Insets(5));
