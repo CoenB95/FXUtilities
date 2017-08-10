@@ -5,13 +5,11 @@ import com.cbapps.javafx.utilities.animation.SmoothInterpolator.AnimType;
 import com.cbapps.javafx.utilities.control.ClockView;
 import com.cbapps.javafx.utilities.font.RobotoFont;
 import javafx.animation.*;
-import javafx.application.Application;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.NumberExpression;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.value.ChangeListener;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.SkinBase;
 import javafx.scene.layout.Pane;
@@ -21,7 +19,6 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Scale;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class ClockViewSkin extends SkinBase<ClockView> {
@@ -67,13 +64,13 @@ public class ClockViewSkin extends SkinBase<ClockView> {
 
 		clockPane.getChildren().setAll(arc, hourArrow, minuteArrow, secondArrow);
 		Label clockText = new Label();
-		clockText.setFont(RobotoFont.thin(70));
+		clockText.setFont(RobotoFont.thin(10));
 		clockText.textProperty().bind(Bindings.format("%d:%02d:%02d",
 				control.hourProperty(), control.minuteProperty(),
 				Bindings.createIntegerBinding(control::getSecond, control.secondProperty())));
 		clockText.textFillProperty().bind(control.textFillProperty());
 		clockText.scaleXProperty().bind(clockText.scaleYProperty());
-		clockText.scaleYProperty().bind(arc.radiusYProperty().multiply(0.007));
+		clockText.scaleYProperty().bind(arc.radiusYProperty().multiply(0.05));
 		clockText.setOpacity(0);
 
 		Interpolator interpolator = new SmoothInterpolator(AnimType.ACCELDECEL);
