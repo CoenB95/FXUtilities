@@ -87,8 +87,6 @@ public class MeterSkin extends SkinBase<MeterView> {
 		sc.yProperty().bind(arc.radiusYProperty().divide(100));
 		Rotate rt = new Rotate(0, 0, 0);
 		ChangeListener<Number> valueListener = (v1, v2, v3) -> {
-			System.out.println("move to " + (arc.getStartAngle() + arc.getLength() -
-					(v3.doubleValue() / (control.getMax() - control.getMin()) * arc.getLength())) + " deg");
 				new Timeline(
 						new KeyFrame(Duration.ZERO,
 								new KeyValue(rt.angleProperty(), rt.getAngle())),
